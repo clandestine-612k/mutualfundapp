@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
 import 'package:mutualfundapp/Home_Screen/view/home_page.dart';
 
 void main() async {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Get.put(FavoritesController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mutual Fund App',

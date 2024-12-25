@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:mutualfundapp/Details_Screen/view/details_screen.dart';
 import 'package:mutualfundapp/Home_Screen/controller/mutual_fund_controller.dart';
 
+import '../../Favorites/view/favorite_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   final MutualFundController controller = Get.put(MutualFundController());
 
@@ -13,6 +15,17 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mutual Funds App'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.favorite,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              Get.to(() => FavoritesScreen());
+            },
+          )
+        ],
       ),
       body: Column(
         children: [

@@ -2,26 +2,45 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutualfundapp/Details_Screen/controller/detailscreen_controller.dart';
+import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
 import 'package:mutualfundapp/models/home_screen_model.dart';
 import 'package:mutualfundapp/models/mutual_fund_model.dart';
 
 class DetailsScreen extends StatelessWidget {
   final MutualFund fund;
 
-  const DetailsScreen({Key? key, required this.fund}) : super(key: key);
+  DetailsScreen({Key? key, required this.fund}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final MutualFundController2 controller = Get.put(MutualFundController2());
+    final FavoritesController favoritesController =
+        Get.put(FavoritesController());
+
+    // Fetch the historical data for the mutual fund
     controller.fetchHistoricalData(fund.schemeCode);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(fund.schemeName),
+        actions: [
+          Obx(() {
+            final isFavorite = favoritesController.isFavorite(fund.schemeCode);
+            return IconButton(
+              icon: Icon(
+                isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite ? Colors.red : Colors.black,
+              ),
+              onPressed: () {
+                favoritesController.toggleFavorite(fund.schemeCode);
+              },
+            );
+          }),
+        ],
       ),
       body: Column(
         children: [
-          // Expanded Box 1: Historical Data
+          // Box 1: Historical Data
           Expanded(
             flex: 1,
             child: Obx(() {
@@ -43,7 +62,6 @@ class DetailsScreen extends StatelessWidget {
               }
 
               final historicalData = controller.navData.value!.data!;
-
               return ListView.builder(
                 padding: const EdgeInsets.all(8.0),
                 itemCount: historicalData.length,
@@ -54,10 +72,10 @@ class DetailsScreen extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(vertical: 4.0),
                     child: ListTile(
                       title: Text(
-                        'Date: ${data.date}', // Display formatted date.
+                        'Date: ${data.date}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      subtitle: Text('NAV: ₹${data.nav}'), // Display NAV.
+                      subtitle: Text('NAV: ₹${data.nav}'),
                     ),
                   );
                 },
@@ -65,7 +83,7 @@ class DetailsScreen extends StatelessWidget {
             }),
           ),
 
-          // Expanded Box 2:
+          // Box 2: Filtered Historical Data with Chart
           Expanded(
             flex: 2,
             child: Obx(() {
@@ -78,22 +96,18 @@ class DetailsScreen extends StatelessWidget {
               }
 
               final allData = controller.navData.value!.data!;
-
-              // State to manage selected year range by default 1 yr
               final selectedYears = 1.obs;
 
-              // Filter data based on selected years
-              List<Data> filteredData() {
+              List<Datam> filteredData() {
                 final cutoffDate = DateTime.now()
                     .subtract(Duration(days: selectedYears.value * 365));
                 return allData
-                    .where((e) => DateTime.parse((e.date!)).isAfter(cutoffDate))
+                    .where((e) => DateTime.parse(e.date!).isAfter(cutoffDate))
                     .toList();
               }
 
               return Column(
                 children: [
-                  // Button Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -127,14 +141,13 @@ class DetailsScreen extends StatelessWidget {
                           LineChartData(
                             lineBarsData: [
                               LineChartBarData(
-                                spots: data
-                                    .map((e) => FlSpot(
-                                          DateTime.parse((e.date!))
-                                              .millisecondsSinceEpoch
-                                              .toDouble(),
-                                          double.tryParse(e.nav!) ?? 0.0,
-                                        ))
-                                    .toList(),
+                                spots: data.map((e) {
+                                  final date = DateTime.parse(e.date!)
+                                      .millisecondsSinceEpoch
+                                      .toDouble();
+                                  final nav = double.tryParse(e.nav!) ?? 0.0;
+                                  return FlSpot(date, nav);
+                                }).toList(),
                                 isCurved: true,
                                 color: Colors.blue,
                                 barWidth: 4,
@@ -146,13 +159,10 @@ class DetailsScreen extends StatelessWidget {
                               leftTitles: AxisTitles(
                                 sideTitles: SideTitles(
                                   showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    return Text(
-                                      value.toStringAsFixed(
-                                          1), // Format the Y-axis value
-                                      style: const TextStyle(fontSize: 12),
-                                    );
-                                  },
+                                  getTitlesWidget: (value, meta) => Text(
+                                    value.toStringAsFixed(1),
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
                                 ),
                               ),
                               bottomTitles: AxisTitles(
@@ -164,9 +174,8 @@ class DetailsScreen extends StatelessWidget {
                                         DateTime.fromMillisecondsSinceEpoch(
                                             value.toInt());
                                     return Text(
-                                      '${date.month}/${date.year % 100}', // Format as MM/YY
-                                      style: const TextStyle(fontSize: 12),
-                                    );
+                                        '${date.month}/${date.year % 100}',
+                                        style: const TextStyle(fontSize: 12));
                                   },
                                 ),
                               ),
@@ -193,7 +202,7 @@ class DetailsScreen extends StatelessWidget {
             }),
           ),
 
-          // Expanded Box 3: Gains Calculation
+          // Box 3: Gains Calculation
           Expanded(
             flex: 1,
             child: Obx(() {
@@ -219,14 +228,11 @@ class DetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '1-Year Gain: ${calculateGain(data, 365).toStringAsFixed(2)}%',
-                    ),
+                        '1-Year Gain: ${calculateGain(data, 365).toStringAsFixed(2)}%'),
                     Text(
-                      '3-Year Gain: ${calculateGain(data, 365 * 3).toStringAsFixed(2)}%',
-                    ),
+                        '3-Year Gain: ${calculateGain(data, 365 * 3).toStringAsFixed(2)}%'),
                     Text(
-                      '5-Year Gain: ${calculateGain(data, 365 * 5).toStringAsFixed(2)}%',
-                    ),
+                        '5-Year Gain: ${calculateGain(data, 365 * 5).toStringAsFixed(2)}%'),
                   ],
                 ),
               );
@@ -237,16 +243,14 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  double calculateGain(List<Data> data, int days) {
+  double calculateGain(List<Datam> data, int days) {
     if (data.isEmpty) return 0.0;
 
     final now = DateTime.now();
     final cutoff = now.subtract(Duration(days: days));
 
-    // Filter data within the cutoff period
     final relevantData =
         data.where((e) => DateTime.parse(e.date!).isAfter(cutoff)).toList();
-
     if (relevantData.length < 2) return 0.0;
 
     final start = double.tryParse(relevantData.last.nav!) ?? 0.0;

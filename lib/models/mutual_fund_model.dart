@@ -1,6 +1,6 @@
 class MutualFund2 {
   Meta? meta;
-  List<Data>? data;
+  List<Datam>? data;
   String? status;
 
   MutualFund2({this.meta, this.data, this.status});
@@ -8,9 +8,9 @@ class MutualFund2 {
   MutualFund2.fromJson(Map<String, dynamic> json) {
     meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <Datam>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new Datam.fromJson(v));
       });
     }
     status = json['status'];
@@ -81,13 +81,13 @@ class Meta {
 //   }
 // }
 
-class Data {
+class Datam {
   String? date;
   String? nav;
 
-  Data({this.date, this.nav});
+  Datam({this.date, this.nav});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Datam.fromJson(Map<String, dynamic> json) {
     date = _parseDate(json['date']);
     nav = json['nav'];
   }
