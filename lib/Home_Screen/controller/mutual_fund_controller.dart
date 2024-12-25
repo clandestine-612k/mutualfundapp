@@ -4,8 +4,9 @@ import 'package:mutualfundapp/models/home_screen_model.dart';
 import 'package:mutualfundapp/repositories/network_controller.dart';
 
 class MutualFundController extends GetxController {
-  var mutualFunds = <MutualFund>[].obs;
-  var allMutualFunds = <MutualFund>[].obs;
+  RxList<MutualFund> mutualFunds = <MutualFund>[].obs;
+  RxList<MutualFund> allMutualFunds = <MutualFund>[].obs;
+  RxBool loading = false.obs;
   final GetStorage storage = GetStorage();
 
   @override
@@ -15,6 +16,7 @@ class MutualFundController extends GetxController {
   }
 
   void loadMutualFunds() async {
+    loading.value = true; //loading started
     if (storage.hasData('mutualFunds')) {
       // Parse the stored JSON data into a list of MutualFund objects
       allMutualFunds.value = (storage.read('mutualFunds') as List)
@@ -23,7 +25,8 @@ class MutualFundController extends GetxController {
       mutualFunds.value = allMutualFunds;
     } else {
       try {
-        var fetchedFunds = await MutualFundService.fetchMutualFunds();
+        List<MutualFund> fetchedFunds =
+            await MutualFundService.fetchMutualFunds();
         allMutualFunds.value = fetchedFunds;
         mutualFunds.value = allMutualFunds;
         // Store the data locally as JSON
@@ -33,13 +36,14 @@ class MutualFundController extends GetxController {
         Get.snackbar('Error', 'Failed to fetch mutual funds');
       }
     }
+    loading.value = false; // Stop loading
   }
 
   void filterMutualFunds(String query) {
     if (query.isEmpty) {
       mutualFunds.value = allMutualFunds;
     } else {
-      var filteredFunds = allMutualFunds
+      List<MutualFund> filteredFunds = allMutualFunds
           .where((fund) =>
               fund.schemeName.toLowerCase().contains(query.toLowerCase()))
           .toList();

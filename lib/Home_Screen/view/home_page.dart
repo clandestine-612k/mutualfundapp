@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mutualfundapp/Details_Screen/view/details_screen.dart';
 import 'package:mutualfundapp/Home_Screen/controller/mutual_fund_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -34,8 +35,17 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
             child: Obx(() {
-              if (controller.mutualFunds.isEmpty) {
+              if (controller.loading.value) {
                 return const Center(child: CircularProgressIndicator());
+              }
+              if (controller.mutualFunds.isEmpty) {
+                // Show message if no data is available
+                return const Center(
+                  child: Text(
+                    'No mutual funds data available.',
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                );
               }
               return ListView.builder(
                 itemCount: controller.mutualFunds.length,
@@ -52,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                         side: const BorderSide(color: Colors.black),
                       ),
                       onTap: () {
-                        // Navigate to details screen (to be implemented)
+                        Get.to(() => DetailsScreen(fund: fund));
                       },
                     ),
                   );
