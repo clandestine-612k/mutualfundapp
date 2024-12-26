@@ -42,6 +42,11 @@ class MutualFundController extends GetxController {
   void filterMutualFunds(String query) {
     if (query.isEmpty) {
       mutualFunds.value = allMutualFunds;
+    } else if (query.isNum) {
+      List<MutualFund> filteredFunds = allMutualFunds
+          .where((fund) => fund.schemeCode.toString().contains(query))
+          .toList();
+      mutualFunds.value = filteredFunds;
     } else {
       List<MutualFund> filteredFunds = allMutualFunds
           .where((fund) =>

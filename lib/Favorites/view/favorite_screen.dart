@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
+import 'package:mutualfundapp/colors.dart';
 
 class FavoritesScreen extends StatelessWidget {
   final FavoritesController favoritesController =
@@ -10,6 +11,7 @@ class FavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: color1,
         title: const Text('Favorites'),
       ),
       body: Obx(() {
@@ -22,13 +24,20 @@ class FavoritesScreen extends StatelessWidget {
           itemCount: favoritesController.favorites.length,
           itemBuilder: (context, index) {
             final schemeCode = favoritesController.favorites[index];
-            return ListTile(
-              title: Text('Scheme Code: $schemeCode'),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  favoritesController.toggleFavorite(schemeCode);
-                },
+            return Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(color: Colors.black),
+                ),
+                title: Text('Scheme Code: $schemeCode'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    favoritesController.toggleFavorite(schemeCode);
+                  },
+                ),
               ),
             );
           },

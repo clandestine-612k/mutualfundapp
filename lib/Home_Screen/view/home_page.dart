@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutualfundapp/Details_Screen/view/details_screen.dart';
 import 'package:mutualfundapp/Home_Screen/controller/mutual_fund_controller.dart';
+import 'package:mutualfundapp/colors.dart';
 
 import '../../Favorites/view/favorite_screen.dart';
 
@@ -14,10 +15,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: color1,
         title: const Text('Mutual Funds App'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.favorite,
               color: Colors.red,
             ),
@@ -29,19 +31,23 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              autocorrect: true,
-              onChanged: (query) => controller.filterMutualFunds(query),
-              decoration: InputDecoration(
-                labelText: 'Search Mutual Funds',
-                labelStyle:
-                    const TextStyle(color: Colors.black54), // Label color
-                filled: true, // Enables background color
-                fillColor: Colors.white.withOpacity(1),
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32)),
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                autocorrect: true,
+                onChanged: (query) => controller.filterMutualFunds(query),
+                decoration: const InputDecoration(
+                  labelText: 'Search Mutual Funds',
+                  labelStyle: TextStyle(color: Colors.black54), // Label color
+                  filled: true, // Enables background color
+                  fillColor: Colors.white,
+
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(32)),
+                  ),
+                  suffixIcon: Icon(Icons.search, color: Colors.black54),
                 ),
               ),
             ),
@@ -69,7 +75,7 @@ class HomeScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text(fund.schemeName),
                       subtitle: Text('Scheme Code: ${fund.schemeCode}'),
-                      hoverColor: Colors.amber,
+                      hoverColor: color2,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                         side: const BorderSide(color: Colors.black),

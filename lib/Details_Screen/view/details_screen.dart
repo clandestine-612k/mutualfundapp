@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutualfundapp/Details_Screen/controller/detailscreen_controller.dart';
 import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
+import 'package:mutualfundapp/colors.dart';
 import 'package:mutualfundapp/models/home_screen_model.dart';
 import 'package:mutualfundapp/models/mutual_fund_model.dart';
 
 class DetailsScreen extends StatelessWidget {
   final MutualFund fund;
 
-  DetailsScreen({Key? key, required this.fund}) : super(key: key);
+  const DetailsScreen({super.key, required this.fund});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class DetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: color1,
         title: Text(fund.schemeName),
         actions: [
           Obx(() {
@@ -40,50 +42,10 @@ class DetailsScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Box 1: Historical Data
-          Expanded(
-            flex: 1,
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (controller.errorMessage.isNotEmpty) {
-                return Center(
-                  child: Text('Error: ${controller.errorMessage.value}'),
-                );
-              }
-
-              if (controller.navData.value == null ||
-                  controller.navData.value!.data == null ||
-                  controller.navData.value!.data!.isEmpty) {
-                return const Center(
-                    child: Text('No historical data available.'));
-              }
-
-              final historicalData = controller.navData.value!.data!;
-              return ListView.builder(
-                padding: const EdgeInsets.all(8.0),
-                itemCount: historicalData.length,
-                itemBuilder: (context, index) {
-                  final data = historicalData[index];
-                  return Card(
-                    elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: ListTile(
-                      title: Text(
-                        'Date: ${data.date}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text('NAV: ₹${data.nav}'),
-                    ),
-                  );
-                },
-              );
-            }),
+          const SizedBox(
+            height: 10,
           ),
-
-          // Box 2: Filtered Historical Data with Chart
+          // Box 1: Filtered Historical Data with Chart
           Expanded(
             flex: 2,
             child: Obx(() {
@@ -113,14 +75,20 @@ class DetailsScreen extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () => selectedYears.value = 1,
+                        style:
+                            ElevatedButton.styleFrom(backgroundColor: color2),
                         child: const Text('1 yr'),
                       ),
                       ElevatedButton(
                         onPressed: () => selectedYears.value = 3,
+                        style:
+                            ElevatedButton.styleFrom(backgroundColor: color2),
                         child: const Text('3 yr'),
                       ),
                       ElevatedButton(
                         onPressed: () => selectedYears.value = 5,
+                        style:
+                            ElevatedButton.styleFrom(backgroundColor: color2),
                         child: const Text('5 yr'),
                       ),
                     ],
@@ -202,7 +170,7 @@ class DetailsScreen extends StatelessWidget {
             }),
           ),
 
-          // Box 3: Gains Calculation
+          // Box 2: Gains Calculation
           Expanded(
             flex: 1,
             child: Obx(() {
@@ -227,12 +195,40 @@ class DetailsScreen extends StatelessWidget {
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                        '1-Year Gain: ${calculateGain(data, 365).toStringAsFixed(2)}%'),
-                    Text(
-                        '3-Year Gain: ${calculateGain(data, 365 * 3).toStringAsFixed(2)}%'),
-                    Text(
-                        '5-Year Gain: ${calculateGain(data, 365 * 5).toStringAsFixed(2)}%'),
+                    Row(
+                      children: [
+                        Card(
+                          color: color2,
+                          elevation: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20.0, bottom: 20.0, left: 8, right: 8),
+                            child: Text(
+                                '1-Year Gain: ${calculateGain(data, 365).toStringAsFixed(2)}%'),
+                          ),
+                        ),
+                        Card(
+                          color: color2,
+                          elevation: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20.0, bottom: 20, left: 8, right: 8),
+                            child: Text(
+                                '3-Year Gain: ${calculateGain(data, 365 * 3).toStringAsFixed(2)}%'),
+                          ),
+                        ),
+                        Card(
+                          color: color2,
+                          elevation: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20.0, bottom: 20.0, left: 8, right: 8),
+                            child: Text(
+                                '5-Year Gain: ${calculateGain(data, 365 * 5).toStringAsFixed(2)}%'),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               );
