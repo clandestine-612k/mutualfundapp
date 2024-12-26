@@ -77,4 +77,24 @@ Steps**Clone the Repository**:git clone [https://github.com/clandestine-612k/mu
     *   Mark funds as favorites and view them on the "Favorites" page.
         
 
-3\. Challenges Faced and Solutions Implemented1. Handling Large Data Sets:**Challenge**: Fetching and displaying historical NAV data for multiple mutual funds.**Solution**: Implemented efficient data fetching with caching using **GetStorage** to minimize API calls and improve performance.2. Real-Time Data Updates:**Challenge**: Ensuring that changes to favorites are reflected instantly across the app.**Solution**: Used **GetX** for state management to provide reactive updates to the UI whenever the favorites list changes.3. Data Visualization:**Challenge**: Rendering historical NAV trends and gains in an intuitive and interactive format. **Solution**: Integrated the **fl\_chart** package to create dynamic and visually appealing line charts.4. Error Handling:**Challenge**: Handling API failures and ensuring a smooth user experience.**Solution**: Added robust error messages to display when API calls fail.
+3\. Challenges Faced and Solutions Implemented
+
+1. Handling Large Data Sets:
+
+  **Challenge**: Fetching and displaying historical NAV data for multiple mutual funds.
+  **Solution**: Implemented efficient data fetching with caching using **GetStorage** to minimize API calls and improve performance.
+
+2. Real-Time Data Updates:
+
+   **Challenge**: Ensuring that changes to favorites are reflected instantly across the app.
+   **Solution**: Used **GetX** for state management to provide reactive updates to the UI whenever the favorites list changes.
+
+3. Data Visualization:
+
+   **Challenge**: Rendering historical NAV trends and gains in an intuitive and interactive format.
+   **Solution**: Integrated the **fl\_chart** package to create dynamic and visually appealing line charts.
+
+4. Error Handling:
+
+   **Challenge**: Handling API failures and ensuring a smooth user experience.
+   **Solution**: Added robust error messages to display when API calls fail.
