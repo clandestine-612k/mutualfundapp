@@ -27,14 +27,14 @@ class DetailsScreen extends StatelessWidget {
         title: Text(fund.schemeName),
         actions: [
           Obx(() {
-            final isFavorite = favoritesController.isFavorite(fund.schemeCode);
+            final isFavorite = favoritesController.isFavorite(fund);
             return IconButton(
               icon: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: isFavorite ? Colors.red : Colors.black,
               ),
               onPressed: () {
-                favoritesController.toggleFavorite(fund.schemeCode);
+                favoritesController.toggleFavorite(fund);
               },
             );
           }),
@@ -45,12 +45,17 @@ class DetailsScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          // Box 1: Filtered Historical Data with Chart
+          //Box 1: To show historical data
           Expanded(
             flex: 2,
             child: Obx(() {
-              if (controller.isLoading.value ||
-                  controller.navData.value == null ||
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (controller.navData.value == null ||
                   controller.navData.value!.data == null ||
                   controller.navData.value!.data!.isEmpty) {
                 return const Center(
@@ -58,12 +63,20 @@ class DetailsScreen extends StatelessWidget {
               }
 
               final allData = controller.navData.value!.data!;
+
+              // Sort data to ensure chronological order
+              final sortedData = List<Datam>.from(allData)
+                ..sort((a, b) =>
+                    DateTime.parse(a.date!).compareTo(DateTime.parse(b.date!)));
+
               final selectedYears = 1.obs;
 
               List<Datam> filteredData() {
-                final cutoffDate = DateTime.now()
-                    .subtract(Duration(days: selectedYears.value * 365));
-                return allData
+                // Set 'now' to the last date in the sorted data
+                final now = DateTime.parse(sortedData.last.date!);
+                final cutoffDate =
+                    now.subtract(Duration(days: selectedYears.value * 365));
+                return sortedData
                     .where((e) => DateTime.parse(e.date!).isAfter(cutoffDate))
                     .toList();
               }
@@ -111,8 +124,10 @@ class DetailsScreen extends StatelessWidget {
                               LineChartBarData(
                                 spots: data.map((e) {
                                   final date = DateTime.parse(e.date!)
-                                      .millisecondsSinceEpoch
-                                      .toDouble();
+                                      .difference(DateTime.parse(
+                                          sortedData.first.date!))
+                                      .inDays
+                                      .toDouble(); // Use days since the first date
                                   final nav = double.tryParse(e.nav!) ?? 0.0;
                                   return FlSpot(date, nav);
                                 }).toList(),
@@ -138,9 +153,10 @@ class DetailsScreen extends StatelessWidget {
                                   showTitles: true,
                                   reservedSize: 30,
                                   getTitlesWidget: (value, meta) {
-                                    final date =
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            value.toInt());
+                                    final firstDate =
+                                        DateTime.parse(sortedData.first.date!);
+                                    final date = firstDate
+                                        .add(Duration(days: value.toInt()));
                                     return Text(
                                         '${date.month}/${date.year % 100}',
                                         style: const TextStyle(fontSize: 12));
@@ -242,16 +258,27 @@ class DetailsScreen extends StatelessWidget {
   double calculateGain(List<Datam> data, int days) {
     if (data.isEmpty) return 0.0;
 
-    final now = DateTime.now();
+    // Sort the data to ensure chronological order
+    final sortedData = List<Datam>.from(data)
+      ..sort(
+          (a, b) => DateTime.parse(a.date!).compareTo(DateTime.parse(b.date!)));
+
+    // Use the first date in the data as 'now'
+    final now = DateTime.parse(sortedData.last.date!);
     final cutoff = now.subtract(Duration(days: days));
 
-    final relevantData =
-        data.where((e) => DateTime.parse(e.date!).isAfter(cutoff)).toList();
+    // Filter data based on the cutoff
+    final relevantData = sortedData
+        .where((e) => DateTime.parse(e.date!).isAfter(cutoff))
+        .toList();
+
     if (relevantData.length < 2) return 0.0;
 
-    final start = double.tryParse(relevantData.last.nav!) ?? 0.0;
-    final end = double.tryParse(relevantData.first.nav!) ?? 0.0;
+    final startNav = double.tryParse(relevantData.last.nav!) ?? 0.0;
+    final endNav = double.tryParse(relevantData.first.nav!) ?? 0.0;
 
-    return ((end - start) / start) * 100;
+    if (startNav == 0.0) return 0.0;
+
+    return ((endNav - startNav) / startNav) * 100;
   }
 }

@@ -23,7 +23,7 @@ class FavoritesScreen extends StatelessWidget {
         return ListView.builder(
           itemCount: favoritesController.favorites.length,
           itemBuilder: (context, index) {
-            final schemeCode = favoritesController.favorites[index];
+            final fund = favoritesController.favorites[index];
             return Padding(
               padding: const EdgeInsets.all(11.0),
               child: ListTile(
@@ -31,11 +31,12 @@ class FavoritesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   side: const BorderSide(color: Colors.black),
                 ),
-                title: Text('Scheme Code: $schemeCode'),
+                title: Text(fund.schemeName),
+                subtitle: Text('Scheme Code: ${fund.schemeCode}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    favoritesController.toggleFavorite(schemeCode);
+                    favoritesController.toggleFavorite(fund);
                   },
                 ),
               ),

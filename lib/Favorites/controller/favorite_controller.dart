@@ -1,30 +1,31 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mutualfundapp/models/home_screen_model.dart';
 
 class FavoritesController extends GetxController {
   final box = GetStorage();
-  RxList<int> favorites = <int>[].obs;
+  RxList<MutualFund> favorites = <MutualFund>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     // Load favorites from GetStorage on initialization
     final storedFavorites = box.read<List>('favorites') ?? [];
-    favorites.value = List<int>.from(storedFavorites);
+    favorites.value = List<MutualFund>.from(storedFavorites);
   }
 
-  void toggleFavorite(int schemeCode) {
-    if (favorites.contains(schemeCode)) {
-      favorites.remove(schemeCode);
+  void toggleFavorite(MutualFund Fund) {
+    if (favorites.contains(Fund)) {
+      favorites.remove(Fund);
       Get.snackbar('Removed', 'Removed from favorites');
     } else {
-      favorites.add(schemeCode);
+      favorites.add(Fund);
       Get.snackbar('Added', 'Added to favorites');
     }
     box.write('favorites', favorites);
   }
 
-  bool isFavorite(int schemeCode) {
-    return favorites.contains(schemeCode);
+  bool isFavorite(MutualFund fund) {
+    return favorites.contains(fund);
   }
 }
