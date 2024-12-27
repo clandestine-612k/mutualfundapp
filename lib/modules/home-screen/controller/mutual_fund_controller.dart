@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mutualfundapp/models/home_screen_model.dart';
-import 'package:mutualfundapp/repositories/network_controller.dart';
+import 'package:mutualfundapp/data/models/home-screen-model.dart';
+import 'package:mutualfundapp/data/repositories/network_controller.dart';
 
 class MutualFundController extends GetxController {
   RxList<MutualFund> mutualFunds = <MutualFund>[].obs;
   RxList<MutualFund> allMutualFunds = <MutualFund>[].obs;
   RxBool loading = false.obs;
   final GetStorage storage = GetStorage();
+  final MutualFundService _service = MutualFundService();
 
   @override
   void onInit() {
@@ -25,8 +26,7 @@ class MutualFundController extends GetxController {
       mutualFunds.value = allMutualFunds;
     } else {
       try {
-        List<MutualFund> fetchedFunds =
-            await MutualFundService.fetchMutualFunds();
+        List<MutualFund> fetchedFunds = await _service.fetchMutualFunds();
         allMutualFunds.value = fetchedFunds;
         mutualFunds.value = allMutualFunds;
         // Store the data locally as JSON

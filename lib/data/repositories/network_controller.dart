@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:mutualfundapp/models/home_screen_model.dart';
-import 'package:mutualfundapp/models/mutual_fund_model.dart';
+import 'package:mutualfundapp/data/models/home-screen-model.dart';
+import 'package:mutualfundapp/data/models/mutual-fund-model.dart';
+import 'package:mutualfundapp/utils/network-requester.dart';
+
+const String baseUrl = 'https://api.mfapi.in/mf/';
+final NetworkRequester _netreq = NetworkRequester();
 
 class MutualFundService {
-  static const String baseUrl = 'https://api.mfapi.in/mf';
-
-  static Future<List<MutualFund>> fetchMutualFunds() async {
+  Future<List<MutualFund>> fetchMutualFunds() async {
     try {
-      Response response = await Dio().get(baseUrl);
+      Response response = await _netreq.get(baseUrl);
       return (response.data as List)
           .map((json) => MutualFund.fromJson(json))
           .toList();
@@ -18,15 +20,13 @@ class MutualFundService {
 }
 
 class MutualFundService2 {
-  static const String _baseUrl = 'https://api.mfapi.in/mf/';
-
-  final Dio _dio = Dio();
+  //static const String _baseUrl = 'https://api.mfapi.in/mf/';
 
   Future<MutualFund2> fetchHistoricalData(int schemeCode) async {
-    final url = '$_baseUrl$schemeCode'; // Adjust the endpoint as needed
+    final url = '$baseUrl$schemeCode'; // Adjust the endpoint as needed
 
     try {
-      final response = await _dio.get(url);
+      final response = await _netreq.get(url);
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;

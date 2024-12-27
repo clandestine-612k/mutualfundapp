@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
-import 'package:mutualfundapp/Home_Screen/view/home_page.dart';
+import 'package:mutualfundapp/modules/favorites/controller/favorite_controller.dart';
+
+import 'package:mutualfundapp/routes/app_pages.dart';
 
 void main() async {
   await GetStorage.init();
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      initialRoute: Routes.home,
+      getPages: AppPages.pages,
+      //home: HomeScreen(),
     );
   }
 }

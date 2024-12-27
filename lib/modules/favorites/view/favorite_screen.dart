@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
-import 'package:mutualfundapp/colors.dart';
+import 'package:mutualfundapp/modules/favorites/controller/favorite_controller.dart';
+import 'package:mutualfundapp/themes/colors.dart';
 
 class FavoritesScreen extends StatelessWidget {
   final FavoritesController favoritesController =

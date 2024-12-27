@@ -1,19 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mutualfundapp/Details_Screen/controller/detailscreen_controller.dart';
-import 'package:mutualfundapp/Favorites/controller/favorite_controller.dart';
-import 'package:mutualfundapp/colors.dart';
-import 'package:mutualfundapp/models/home_screen_model.dart';
-import 'package:mutualfundapp/models/mutual_fund_model.dart';
+import 'package:mutualfundapp/modules/details-screen/controller/detailscreen_controller.dart';
+import 'package:mutualfundapp/modules/favorites/controller/favorite_controller.dart';
+import 'package:mutualfundapp/themes/colors.dart';
+import 'package:mutualfundapp/data/models/home-screen-model.dart';
+import 'package:mutualfundapp/data/models/mutual-fund-model.dart';
 
 class DetailsScreen extends StatelessWidget {
-  final MutualFund fund;
+  const DetailsScreen({super.key});
 
-  const DetailsScreen({super.key, required this.fund});
+  //const DetailsScreen({super.key, required this.fund});
 
   @override
   Widget build(BuildContext context) {
+    final MutualFund fund = Get.arguments as MutualFund;
     final MutualFundController2 controller = Get.put(MutualFundController2());
     final FavoritesController favoritesController =
         Get.put(FavoritesController());

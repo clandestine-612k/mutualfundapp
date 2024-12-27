@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mutualfundapp/Details_Screen/view/details_screen.dart';
-import 'package:mutualfundapp/Home_Screen/controller/mutual_fund_controller.dart';
-import 'package:mutualfundapp/colors.dart';
-
-import '../../Favorites/view/favorite_screen.dart';
+import 'package:mutualfundapp/modules/home-screen/controller/mutual_fund_controller.dart';
+import 'package:mutualfundapp/routes/app_pages.dart';
+import 'package:mutualfundapp/themes/colors.dart';
 
 class HomeScreen extends StatelessWidget {
   final MutualFundController controller = Get.put(MutualFundController());
@@ -24,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               color: Colors.red,
             ),
             onPressed: () {
-              Get.to(() => FavoritesScreen());
+              Get.toNamed(Routes.favouite);
             },
           )
         ],
@@ -81,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                         side: const BorderSide(color: Colors.black),
                       ),
                       onTap: () {
-                        Get.to(() => DetailsScreen(fund: fund));
+                        Get.toNamed(Routes.details, arguments: fund);
                       },
                     ),
                   );
