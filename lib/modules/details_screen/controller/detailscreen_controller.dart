@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mutualfundapp/data/models/mutual-fund-model.dart';
+import 'package:mutualfundapp/data/models/mutual_fund_model.dart';
 import 'package:mutualfundapp/data/repositories/network_controller.dart';
 
 class MutualFundController2 extends GetxController {

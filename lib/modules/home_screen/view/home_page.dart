@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mutualfundapp/modules/home-screen/controller/mutual_fund_controller.dart';
+import 'package:mutualfundapp/modules/home_screen/controller/mutual_fund_controller.dart';
 import 'package:mutualfundapp/routes/app_pages.dart';
 import 'package:mutualfundapp/themes/colors.dart';
 

@@ -1,11 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mutualfundapp/modules/details-screen/controller/detailscreen_controller.dart';
+import 'package:mutualfundapp/modules/details_screen/controller/detailscreen_controller.dart';
 import 'package:mutualfundapp/modules/favorites/controller/favorite_controller.dart';
 import 'package:mutualfundapp/themes/colors.dart';
-import 'package:mutualfundapp/data/models/home-screen-model.dart';
-import 'package:mutualfundapp/data/models/mutual-fund-model.dart';
+import 'package:mutualfundapp/data/models/home_screen_model.dart';
+import 'package:mutualfundapp/data/models/mutual_fund_model.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key});

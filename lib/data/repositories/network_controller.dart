@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:mutualfundapp/data/models/home-screen-model.dart';
-import 'package:mutualfundapp/data/models/mutual-fund-model.dart';
-import 'package:mutualfundapp/utils/network-requester.dart';
+import 'package:mutualfundapp/data/models/home_screen_model.dart';
+import 'package:mutualfundapp/data/models/mutual_fund_model.dart';
+import 'package:mutualfundapp/utils/network_requester.dart';
 
 const String baseUrl = 'https://api.mfapi.in/mf/';
 final NetworkRequester _netreq = NetworkRequester();

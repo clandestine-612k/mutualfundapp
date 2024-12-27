@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mutualfundapp/data/models/home-screen-model.dart';
+import 'package:mutualfundapp/data/models/home_screen_model.dart';
 
 class FavoritesController extends GetxController {
   final box = GetStorage();
